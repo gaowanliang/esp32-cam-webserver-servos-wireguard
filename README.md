@@ -1,4 +1,4 @@
-# ESP32-CAM example revisited. &nbsp;&nbsp;&nbsp; <span title="Master branch build status">[![CI Status](https://travis-ci.com/easytarget/esp32-cam-webserver.svg?branch=master)](https://travis-ci.com/github/easytarget/esp32-cam-webserver)</span> &nbsp;&nbsp; <span title="ESP EYE">![ESP-EYE logo](Docs/logo.svg)</span>
+# ESP32-CAM example revisited - with servo control. &nbsp;&nbsp;&nbsp; <span title="Master branch build status">[![CI Status](https://travis-ci.com/easytarget/esp32-cam-webserver.svg?branch=master)](https://travis-ci.com/github/easytarget/esp32-cam-webserver)</span> &nbsp;&nbsp; <span title="ESP EYE">![ESP-EYE logo](Docs/logo.svg)</span>
 
 ## Taken from the ESP examples, and expanded
 This sketch is a extension/expansion/rework of the 'official' ESP32 Camera example sketch from Espressif:
@@ -6,6 +6,7 @@ This sketch is a extension/expansion/rework of the 'official' ESP32 Camera examp
 https://github.com/espressif/arduino-esp32/tree/master/libraries/ESP32/examples/Camera/CameraWebServer
 
 But expanded with:
+* Servo control (horizontal and vertical)
 * More options for default network and camera settings
 * Save and restore settings
 * Control of on-board lamps, rotate the view in the browser
