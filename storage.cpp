@@ -9,7 +9,10 @@ extern int lampVal;       // The current Lamp value
 extern bool autoLamp;     // Automatic lamp mode
 extern int xclk;          // Camera module clock speed
 extern int minFrameTime;  // Limits framerate
-
+extern int servoVert;
+extern int servoHorz;
+extern bool reverseVert;
+extern bool reverseHorz;
 /*
  * Useful utility when debugging...
  */
@@ -101,6 +104,11 @@ void loadPrefs(fs::FS &fs){
     if (xclkPref >= 2) xclk = xclkPref;
     myRotation = jsonExtract(prefs, "rotate").toInt();
 
+    servoVert = jsonExtract(prefs, "servo_vert").toInt();
+    servoHorz = jsonExtract(prefs, "servo_horz").toInt();
+    reverseVert = (jsonExtract(prefs, "reverse_vert").toInt() == 0) ? false : true;
+    reverseHorz = (jsonExtract(prefs, "reverse_horz").toInt() == 0) ? false : true;
+
     // process camera settings
     s->set_framesize(s, (framesize_t)jsonExtract(prefs, "framesize").toInt());
     s->set_quality(s, jsonExtract(prefs, "quality").toInt());
@@ -148,6 +156,10 @@ void savePrefs(fs::FS &fs){
   *p++ = '{';
   p+=sprintf(p, "\"lamp\":%i,", lampVal);
   p+=sprintf(p, "\"autolamp\":%u,", autoLamp);
+  p+=sprintf(p, "\"servo_vert\":%i,", servoVert);
+  p+=sprintf(p, "\"servo_horz\":%i,", servoHorz);
+  p+=sprintf(p, "\"reverse_vert\":%u,", reverseVert);
+  p+=sprintf(p, "\"reverse_horz\":%u,", reverseHorz);
   p+=sprintf(p, "\"framesize\":%u,", s->status.framesize);
   p+=sprintf(p, "\"quality\":%u,", s->status.quality);
   p+=sprintf(p, "\"xclk\":%u,", xclk);
@@ -175,6 +187,7 @@ void savePrefs(fs::FS &fs){
   p+=sprintf(p, "\"dcw\":%u,", s->status.dcw);
   p+=sprintf(p, "\"colorbar\":%u,", s->status.colorbar);
   p+=sprintf(p, "\"rotate\":\"%d\"", myRotation);
+
   *p++ = '}';
   *p++ = 0;
   file.print(json_response);

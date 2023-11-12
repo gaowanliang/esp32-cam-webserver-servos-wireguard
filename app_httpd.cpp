@@ -32,6 +32,8 @@
 extern void flashLED(int flashtime);
 extern void setLamp(int newVal);
 extern void printLocalTime(bool extraData);
+extern void moveServoVert();
+extern void moveServoHorz();
 
 // External variables declared in the main .ino
 extern char myName[];
@@ -66,6 +68,10 @@ extern bool otaEnabled;
 extern char otaPassword[];
 extern unsigned long xclk;
 extern int sensorPID;
+extern int servoVert;
+extern int servoHorz;
+extern bool reverseVert;
+extern bool reverseHorz;
 
 typedef struct {
         httpd_req_t *req;
@@ -406,6 +412,16 @@ static esp_err_t cmd_handler(httpd_req_t *req){
             setLamp(lampVal);
         }
     }
+    else if (!strcmp(variable, "servo_vert")) {
+      servoVert = constrain(val,10,170);
+      moveServoVert();
+    }
+    else if (!strcmp(variable, "servo_horz")) {
+      servoHorz = constrain(val,0,180);
+      moveServoHorz();
+    }
+    else if(!strcmp(variable, "reverse_vert")) reverseVert = val;
+    else if(!strcmp(variable, "reverse_horz")) reverseHorz = val;
     else if(!strcmp(variable, "save_prefs")) {
         if (filesystem) savePrefs(SPIFFS);
     }
@@ -446,6 +462,10 @@ static esp_err_t status_handler(httpd_req_t *req){
         sensor_t * s = esp_camera_sensor_get();
         p+=sprintf(p, "\"lamp\":%d,", lampVal);
         p+=sprintf(p, "\"autolamp\":%d,", autoLamp);
+        p+=sprintf(p, "\"servo_vert\":%d,", servoVert);
+        p+=sprintf(p, "\"servo_horz\":%d,", servoHorz);
+        p+=sprintf(p, "\"reverse_vert\":%u,", reverseVert);
+        p+=sprintf(p, "\"reverse_horz\":%u,", reverseHorz);
         p+=sprintf(p, "\"min_frame_time\":%d,", minFrameTime);
         p+=sprintf(p, "\"framesize\":%u,", s->status.framesize);
         p+=sprintf(p, "\"quality\":%u,", s->status.quality);

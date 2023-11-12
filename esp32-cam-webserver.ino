@@ -8,6 +8,9 @@
 #include "src/parsebytes.h"
 #include "time.h"
 #include <ESPmDNS.h>
+//#include <ESP32Servo.h>
+#include "soc/soc.h"             // disable brownout problems
+#include "soc/rtc_cntl_reg.h"    // disable brownout problems
 
 
 /* This sketch is a extension/expansion/reork of the 'official' ESP32 Camera example
@@ -231,6 +234,24 @@ String critERR = "";
 // Debug flag for stream and capture data
 bool debugData;
 
+// servo vars
+const int servoMoveAmt = 10;
+int servoVert = 90;
+int servoHorz = 90;
+//#define DUMMY_SERVO_1 14
+//#define DUMMY_SERVO_2 15
+#define SERVO_1      12
+#define SERVO_2      13
+#define SERVO_STEP   5
+#define SERVO_VERT_CH 2 // channels for servos
+#define SERVO_HORZ_CH 4
+//Servo servoN1;
+//Servo servoN2;
+//Servo servo1;
+//Servo servo2;
+bool reverseVert = false;
+bool reverseHorz = false;
+
 void debugOn() {
     debugData = true;
     Serial.println("Camera debug data is enabled (send 'd' for status dump, or any other char to disable debug)");
@@ -279,6 +300,32 @@ void setLamp(int newVal) {
         Serial.println(brightness);
     }
 #endif
+}
+
+// Arduino like analogWrite
+// value has to be between 0 and valueMax
+// (used for servos)
+void ledcAnalogWrite(uint8_t channel, uint32_t value, uint32_t valueMax = 180)
+{
+  // calculate duty, 8191 from 2 ^ 13 - 1
+  uint32_t duty = (8191 / valueMax) * min(value, valueMax);
+  ledcWrite(channel, duty);
+}
+
+void moveServoVert() {
+  //servo1.write(servoVert);
+  //ledcAnalogWrite(2, servoVert); // channel, 0-180
+  ledcAnalogWrite(SERVO_VERT_CH, servoVert); // channel, 0-180
+  Serial.print("Servo Vert: ");
+  Serial.println(servoVert);
+}
+
+void moveServoHorz() {
+  //servo2.write(servoHorz);
+  //ledcAnalogWrite(4, servoHorz); // channel, 0-180)
+  ledcAnalogWrite(SERVO_HORZ_CH, servoHorz); // channel, 0-180
+  Serial.print("Servo Horz: ");
+  Serial.println(servoHorz);
 }
 
 void printLocalTime(bool extraData=false) {
@@ -629,6 +676,39 @@ void WifiSetup() {
 }
 
 void setup() {
+    WRITE_PERI_REG(RTC_CNTL_BROWN_OUT_REG, 0); //disable brownout detector
+
+    // begin servos setup
+
+    /*
+    ESP32PWM::allocateTimer(2);   // direct servos to use timers 2 and 3 as the camera uses 0 and 1
+    servo1.setPeriodHertz(50);    // standard 50 hz servo
+    //servoN1.attach(DUMMY_SERVO_1, 1000, 2000);
+    servo1.attach(SERVO_1, 1000, 2000);
+
+    ESP32PWM::allocateTimer(3);   // direct servos to use timers 2 and 3 as the camera uses 0 and 1
+    servo2.setPeriodHertz(50);    // standard 50 hz servo
+    //servoN2.attach(DUMMY_SERVO_2, 1000, 2000);
+    servo2.attach(SERVO_2, 1000, 2000);
+    
+    //servo1.write(servo1Pos);
+    //servo2.write(servo2Pos);
+    servo1.write(servoVert);
+    servo2.write(servoHorz);
+    */
+
+    ledcSetup(SERVO_VERT_CH, 50, 16); // channel, freq, resolution
+    ledcAttachPin(SERVO_1, SERVO_VERT_CH); // pin, channel
+
+    ledcSetup(SERVO_HORZ_CH, 50, 16); // channel, freq, resolution
+    ledcAttachPin(SERVO_2, SERVO_HORZ_CH); // pin, channel
+
+    moveServoVert();
+    delay(1000);
+    moveServoHorz();
+
+    // end servos setup
+
     Serial.begin(115200);
     Serial.setDebugOutput(true);
     Serial.println();

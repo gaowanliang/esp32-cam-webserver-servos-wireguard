@@ -48,7 +48,39 @@ const uint8_t index_ov2640_html[] = R"=====(<!doctype html>
                   <label class="slider" for="autolamp"></label>
                 </div>
               </div>
-
+              <div class="input-group" id="servo_move-group">
+                <label>Servo Movement</label>
+                <button id="servo_left">&larr;</button>
+                <button id="servo_right">&rarr;</button>
+                <button id="servo_up">&uarr;</button>
+                <button id="servo_down">&darr;</button>
+              </div>
+              <div class="input-group" id="servo_vert-group">
+                <label for="servo_vert">Servo Vertical</label>
+                <div class="range-min">10</div>
+                <input type="range" id="servo_vert" min="10" max="170" value="90" class="default-action">
+                <div class="range-max">170</div>
+              </div>
+              <div class="input-group" id="servo_horz-group">
+                <label for="servo_horz">Servo Horizontal</label>
+                <div class="range-min">0</div>
+                <input type="range" id="servo_horz" min="0" max="180" value="90" class="default-action">
+                <div class="range-max">180</div>
+              </div>
+              <div class="input-group" id="servo_rev_vert-group" title="Enable reversed movement of vertical servo">
+                <label for="reverse_vert">Reverse Vertical Servo</label>
+                <div class="switch">
+                  <input id="reverse_vert" type="checkbox" class="default-action">
+                  <label class="slider" for="reverse_vert"></label>
+                </div>
+              </div>
+              <div class="input-group" id="servo_rev_horz-group" title="Enable reversed movement of horizontal servo">
+                <label for="reverse_horz">Reverse Horizontal Servo</label>
+                <div class="switch">
+                  <input id="reverse_horz" type="checkbox" class="default-action">
+                  <label class="slider" for="reverse_horz"></label>
+                </div>
+              </div>
               <div class="input-group" id="framesize-group" title="Camera resolution&#013;Higher resolutions will result in lower framerates">
                 <label for="framesize">Resolution</label>
                 <select id="framesize" class="default-action">
@@ -302,6 +334,14 @@ const uint8_t index_ov2640_html[] = R"=====(<!doctype html>
     const waitSettings = document.getElementById('wait-settings')
     const lampGroup = document.getElementById('lamp-group')
     const autolampGroup = document.getElementById('autolamp-group')
+    const servoVert = document.getElementById('servo_vert')
+    const servoHorz = document.getElementById('servo_horz')
+    const reverseVert = document.getElementById('reverse_vert')
+    const reverseHorz = document.getElementById('reverse_horz')
+    const servoLeftButton = document.getElementById('servo_left')
+    const servoRightButton = document.getElementById('servo_right')
+    const servoUpButton = document.getElementById('servo_up')
+    const servoDownButton = document.getElementById('servo_down')
     const streamGroup = document.getElementById('stream-group')
     const camName = document.getElementById('cam_name')
     const codeVer = document.getElementById('code_ver')
@@ -371,6 +411,32 @@ const uint8_t index_ov2640_html[] = R"=====(<!doctype html>
           } else {
             show(lampGroup)
             show(autolampGroup)
+          }
+        } else if (el.id === "servo_vert") {
+          servoVert.value = value;
+        } else if (el.id === "servo_horz") {
+          servoHorz.value = value;
+        } else if (el.id === "reverse_vert") {
+          //reverseVert.value = value;
+          if (value) {
+            servoVert.style.direction = 'rtl';
+            servoUpButton.textContent = '↓';
+            servoDownButton.textContent = '↑';
+          } else {
+            servoVert.style.direction = 'ltr';
+            servoUpButton.textContent = '↑';
+            servoDownButton.textContent = '↓';
+          }
+        } else if (el.id === "reverse_horz") {
+          //reverseHorz.value = value;
+          if (value) {
+            servoHorz.style.direction = 'rtl';
+            servoLeftButton.textContent = '→';
+            servoRightButton.textContent = '←';
+          } else {
+            servoHorz.style.direction = 'ltr';
+            servoLeftButton.textContent = '←';
+            servoRightButton.textContent = '→';
           }
         } else if(el.id === "cam_name"){
           camName.innerHTML = value;
@@ -576,6 +642,68 @@ const uint8_t index_ov2640_html[] = R"=====(<!doctype html>
     awb.onchange = () => {
       updateConfig(awb)
       awb.checked ? show(wb) : hide(wb)
+    }
+
+    servoVert.onchange = () => {
+      updateConfig(servoVert);
+    }
+
+    servoHorz.onchange = () => {
+      updateConfig(servoHorz);
+    }
+
+    reverseVert.onchange = () => {
+      updateConfig(reverseVert);
+      if (reverseVert.checked) {
+        servoVert.style.direction = 'rtl';
+        servoUpButton.textContent = '↓';
+        servoDownButton.textContent = '↑';
+      } else {
+        servoVert.style.direction = 'ltr';
+        servoUpButton.textContent = '↑';
+        servoDownButton.textContent = '↓';
+      }
+    }
+
+    reverseHorz.onchange = () => {
+      updateConfig(reverseHorz);
+      if (reverseHorz.checked) {
+        servoHorz.style.direction = 'rtl';
+        servoLeftButton.textContent = '→';
+        servoRightButton.textContent = '←';
+      } else {
+        servoHorz.style.direction = 'ltr';
+        servoLeftButton.textContent = '←';
+        servoRightButton.textContent = '→';
+      }
+    }
+
+    servoLeftButton.onclick = () => {
+      if (parseInt(servoHorz.value) >= 10) {
+        servoHorz.value -= 10;
+        updateConfig(servoHorz);
+      }
+    }
+
+    servoRightButton.onclick = () => {
+      if (parseInt(servoHorz.value) <= 170) {
+        servoHorz.value = servoHorz.value * 1 + 10;
+        updateConfig(servoHorz);
+      }
+    }
+
+    servoDownButton.onclick = () => {
+      if (parseInt(servoVert.value) >= 20) {
+        servoVert.value -= 10;
+        updateConfig(servoVert);
+      }      
+    }
+
+    servoUpButton.onclick = () => {
+      if (parseInt(servoVert.value) <= 160) {
+        servoVert.value = servoVert.value * 1 + 10;
+        updateConfig(servoVert);
+      }
     }
 
     // Detection and framesize
