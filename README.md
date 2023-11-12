@@ -1,6 +1,25 @@
 # ESP32-CAM example revisited - with servo control. &nbsp;&nbsp;&nbsp; <span title="Master branch build status">[![CI Status](https://travis-ci.com/easytarget/esp32-cam-webserver.svg?branch=master)](https://travis-ci.com/github/easytarget/esp32-cam-webserver)</span> &nbsp;&nbsp; <span title="ESP EYE">![ESP-EYE logo](Docs/logo.svg)</span>
 
 ## Taken from the ESP examples, and expanded
+
+
+### Servo Modifications
+
+![Servo UI Screenshot](Docs/servo-ui.png)
+
+3D Printer files for tilt and pan with covers: https://www.thingiverse.com/thing:4621865.
+You can buy the tilt and pan hardware with the screws along with the two servos from places like [Amazon](https://www.amazon.com/dp/B0775R6JFF) or [AliExpress](https://www.aliexpress.us/item/3256804363840656.html). Then you just need to 3D print Front_Cover.stl, Bottom_Cover.stl, and Mount_Original.stl.
+I did exactly that, however the clips didn't quite catch on the two rectangular insets on the sides of Mount_Original.stl, so I used Blender to make them slightly bigger so that the clip could actually catch in them. Probably don't need to do that if printing all the pieces yourself since I assume they would just fit correcty.
+The pan and tilt [hardware](https://www.aliexpress.us/item/3256804363840656.html) and [servos](https://www.amazon.com/dp/B07Q6JGWNV) can be bought separately, useful if doing a bunch, or just utilizing one servo for panning only.
+
+The servos use GPIO pins 12 and 13, that way its easy to just use a four-pin female header to plug into the ESP-32, and then create the connections for input ground and power as well as the ground, power, and data lines of the servos.
+
+In many applications the tilting feature is probably unnecessary and can be omitted to cut down on hardware.
+
+![Servo Wiring Harness](Docs/servo-connections.png)
+
+### Original Documentation
+
 This sketch is a extension/expansion/rework of the 'official' ESP32 Camera example sketch from Espressif:
 
 https://github.com/espressif/arduino-esp32/tree/master/libraries/ESP32/examples/Camera/CameraWebServer
@@ -13,17 +32,6 @@ But expanded with:
 * Dedicated standalone stream viewer
 * Over The Air firmware updates
 * Lots of minor fixes and tweaks, documentation etc.
-
-![Servo UI Screenshot](Docs/servo-ui.png)
-
-3D Printer files for tilt and pan with covers: https://www.thingiverse.com/thing:4621865.
-You can buy the tilt and pan hardware with the screws along with the two servos from places like [Amazon](https://www.amazon.com/dp/B0775R6JFF) or [AliExpress](https://www.aliexpress.us/item/3256804363840656.html). Then you just need to 3D print Front_Cover.stl, Bottom_Cover.stl, and Mount_Original.stl.
-I did exactly that, however the clips didn't quite catch on the two rectangular insets on the sides of Mount_Original.stl, so I used Blender to make them slightly bigger so that the clip could actually catch in them. Probably don't need to do that if printing all the pieces yourself since I assume they would just fit correcty.
-The pan and tilt [hardware](https://www.aliexpress.us/item/3256804363840656.html) and [servos](https://www.amazon.com/dp/B07Q6JGWNV) can be bought separately, useful if doing a bunch, or just utilizing one servo for panning only.
-
-The servos use GPIO pins 12 and 13, that way its easy to just use a four-pin female header to plug into the ESP-32, and then create the connections for input ground and power as well as the ground, power, and data lines of the servos.
-
-In many applications the tilting feature is probably unnecessary and can be omitted to cut down on hardware.
 
 And 'reduced' by removing the Face Recognition features
 * **If you want to try the Face Recognition features** please use the [`3.x` maintenance branch](https://github.com/easytarget/esp32-cam-webserver/tree/3.x), which still recieves bugfixes, but is not receiving any further development.
