@@ -14,6 +14,8 @@ But expanded with:
 * Over The Air firmware updates
 * Lots of minor fixes and tweaks, documentation etc.
 
+![Servo UI Screenshot](Docs/servo-ui.png)
+
 And 'reduced' by removing the Face Recognition features
 * **If you want to try the Face Recognition features** please use the [`3.x` maintenance branch](https://github.com/easytarget/esp32-cam-webserver/tree/3.x), which still recieves bugfixes, but is not receiving any further development.
 * They were a demo, only worked in low resolution modes, did not preserve the face database between power cycles, and were of little use in real-world applications.
