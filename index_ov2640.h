@@ -55,17 +55,17 @@ const uint8_t index_ov2640_html[] = R"=====(<!doctype html>
                 <button id="servo_up">&uarr;</button>
                 <button id="servo_down">&darr;</button>
               </div>
-              <div class="input-group" id="servo_vert-group">
-                <label for="servo_vert">Servo Vertical</label>
-                <div class="range-min">10</div>
-                <input type="range" id="servo_vert" min="10" max="170" value="90" class="default-action">
-                <div class="range-max">170</div>
-              </div>
               <div class="input-group" id="servo_horz-group">
                 <label for="servo_horz">Servo Horizontal</label>
                 <div class="range-min">0</div>
                 <input type="range" id="servo_horz" min="0" max="180" value="90" class="default-action">
                 <div class="range-max">180</div>
+              </div>
+              <div class="input-group" id="servo_vert-group">
+                <label for="servo_vert">Servo Vertical</label>
+                <div class="range-min">10</div>
+                <input type="range" id="servo_vert" min="10" max="170" value="90" class="default-action">
+                <div class="range-max">170</div>
               </div>
               <div class="input-group" id="servo_rev_vert-group" title="Enable reversed movement of vertical servo">
                 <label for="reverse_vert">Reverse Vertical Servo</label>
