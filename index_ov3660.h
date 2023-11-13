@@ -29,6 +29,7 @@ const uint8_t index_ov3660_html[] = R"=====(<!doctype html>
         <button id="swap-viewer" style="float:left;" title="Swap to simple viewer">Simple</button>
         <button id="get-still" style="float:left;">Get Still</button>
         <button id="toggle-stream" style="float:left;" class="hidden">Start Stream</button>
+        <button id="menu-toggle" style="float:left;">MIN</button>
         <div id="wait-settings" style="float:left;" class="loader" title="Waiting for camera settings to load"></div>
       </div>
       <div id="content">
@@ -342,6 +343,8 @@ const uint8_t index_ov3660_html[] = R"=====(<!doctype html>
     var baseHost = document.location.origin;
     var streamURL = 'Undefined';
     var viewerURL = 'Undefined';
+    var prevShownElems = [];
+    var alwaysShownElems = ['lamp-group', 'servo_move-group', 'servo_horz-group', 'servo_vert-group', 'framesize-group'];
 
     const header = document.getElementById('logo')
     const settings = document.getElementById('sidebar')
@@ -373,6 +376,7 @@ const uint8_t index_ov3660_html[] = R"=====(<!doctype html>
     const clearPrefsButton = document.getElementById('clear_prefs')
     const rebootButton = document.getElementById('reboot')
     const minFrameTime = document.getElementById('min_frame_time')
+    const menuToggleButton = document.getElementById('menu-toggle')
 
     const hide = el => {
       el.classList.add('hidden')
@@ -582,6 +586,27 @@ const uint8_t index_ov3660_html[] = R"=====(<!doctype html>
       console.log('Rotation ' + rot + ' applied');
     }
 
+    const hideUnusedElems = () => {
+      const menuDivs = document.getElementById('menu');
+      for (const x of menuDivs.children) {
+        if (!(alwaysShownElems.includes(x.id)) && !(x.classList.contains('hidden'))) {
+          prevShownElems.push(x.id);
+          x.classList.add('hidden');
+        }
+      }
+      document.getElementById('menu-toggle').textContent = "MAX";
+    }
+
+    const showUnusedElems = () => {
+      let elem;
+      for (const x of prevShownElems) {
+        elem = document.getElementById(x);
+        elem.classList.remove('hidden');
+      }
+      prevShownElems = [];
+      document.getElementById('menu-toggle').textContent = "MIN"
+    }
+
     // Attach actions to controls
 
     streamLink.onclick = () => {
@@ -607,6 +632,14 @@ const uint8_t index_ov3660_html[] = R"=====(<!doctype html>
         stopStream();
       } else {
         startStream();
+      }
+    }
+
+    menuToggleButton.onclick = () => {
+      if (menuToggleButton.textContent == 'MIN') {
+        hideUnusedElems();
+      } else if (menuToggleButton.textContent == 'MAX') {
+        showUnusedElems();
       }
     }
 
