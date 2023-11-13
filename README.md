@@ -9,7 +9,7 @@
 
 3D Printer files for tilt and pan with covers: https://www.thingiverse.com/thing:4621865.
 You can buy the tilt and pan hardware with the screws along with the two servos from places like [Amazon](https://www.amazon.com/dp/B0775R6JFF) or [AliExpress](https://www.aliexpress.us/item/3256804363840656.html). Then you just need to 3D print Front_Cover.stl, Bottom_Cover.stl, and Mount_Original.stl.
-I did exactly that, however the clips didn't quite catch on the two rectangular insets on the sides of Mount_Original.stl, so I used Blender to make them slightly bigger so that the clip could actually catch in them. Probably don't need to do that if printing all the pieces yourself since I assume they would just fit correcty.
+I did exactly that, however the clips didn't quite catch on the two rectangular insets on the sides of Mount_Original.stl, so I used Blender to make them slightly bigger so that the clip could actually catch in them. Probably don't need to do that if printing all the pieces yourself since I assume they would just fit correcty. I've included these three files, two of which I modified to fit better. The front cover I modified as well since it fits a tad too tight with the back cover.
 The pan and tilt [hardware](https://www.aliexpress.us/item/3256804363840656.html) and [servos](https://www.amazon.com/dp/B07Q6JGWNV) can be bought separately, useful if doing a bunch, or just utilizing one servo for panning only.
 
 The servos use GPIO pins 12 and 13, that way its easy to just use a four-pin female header to plug into the ESP-32, and then create the connections for input ground and power as well as the ground, power, and data lines of the servos.
