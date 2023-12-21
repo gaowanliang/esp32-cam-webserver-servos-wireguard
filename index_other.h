@@ -43,6 +43,13 @@ const uint8_t index_simple_html[] = R"=====(<!doctype html>
                 <input type="range" id="lamp" min="0" max="100" value="0" class="action-setting">
                 <div class="range-max">Full&#9888;</div>
               </div>
+              <div class="input-group" id="servo_pos-group">
+                <label>Servo Saved Positions</label>
+                <button id="servo_pos1" value="90-90" class="default-action servo-save">P1</button>
+                <button id="servo_pos2" value="90-90" class="default-action servo-save">P2</button>
+                <button id="servo_pos3" value="90-90" class="default-action servo-save">P3</button>
+                <button id="servo_pos4" value="90-90" class="default-action servo-save">P4</button>
+              </div>
               <div class="input-group" id="servo_move-group">
                 <label>Servo Movement</label>
                 <button id="servo_left">&larr;</button>
@@ -61,6 +68,13 @@ const uint8_t index_simple_html[] = R"=====(<!doctype html>
                 <div class="range-min">10</div>
                 <input type="range" id="servo_vert" min="10" max="170" value="90" class="default-action">
                 <div class="range-max">170</div>
+              </div>
+              <div class="input-group" id="servo_savpos-group">
+                <label>Save Servo Position</label>
+                <button id="servo_savpos1">S1</button>
+                <button id="servo_savpos2">S2</button>
+                <button id="servo_savpos3">S3</button>
+                <button id="servo_savpos4">S4</button>
               </div>
               <div class="input-group" id="servo_rev_vert-group" title="Enable reversed movement of vertical servo">
                 <label for="reverse_vert">Reverse Vertical Servo</label>
@@ -115,7 +129,7 @@ const uint8_t index_simple_html[] = R"=====(<!doctype html>
     var baseHost = document.location.origin;
     var streamURL = 'Undefined';
     var prevShownElems = [];
-    var alwaysShownElems = ['lamp-group', 'servo_move-group', 'servo_horz-group', 'servo_vert-group', 'framesize-group'];
+    var alwaysShownElems = ['lamp-group', 'servo_pos-group', 'servo_move-group', 'servo_horz-group', 'servo_vert-group', 'framesize-group'];
 
     const settings = document.getElementById('sidebar')
     const waitSettings = document.getElementById('wait-settings')
@@ -128,6 +142,14 @@ const uint8_t index_simple_html[] = R"=====(<!doctype html>
     const servoRightButton = document.getElementById('servo_right')
     const servoUpButton = document.getElementById('servo_up')
     const servoDownButton = document.getElementById('servo_down')
+    const servoPos1Button = document.getElementById('servo_pos1')
+    const servoPos2Button = document.getElementById('servo_pos2')
+    const servoPos3Button = document.getElementById('servo_pos3')
+    const servoPos4Button = document.getElementById('servo_pos4')
+    const servoSave1Button = document.getElementById('servo_savpos1')
+    const servoSave2Button = document.getElementById('servo_savpos2')
+    const servoSave3Button = document.getElementById('servo_savpos3')
+    const servoSave4Button = document.getElementById('servo_savpos4')
     const rotate = document.getElementById('rotate')
     const view = document.getElementById('stream')
     const viewContainer = document.getElementById('stream-container')
@@ -243,7 +265,11 @@ const uint8_t index_simple_html[] = R"=====(<!doctype html>
           break
         case 'button':
         case 'submit':
-          value = '1'
+          if (el.classList.contains('servo-save')) {
+            value = el.value
+          } else {
+            value = '1'
+          }
           break
         default:
           return
@@ -280,6 +306,9 @@ const uint8_t index_simple_html[] = R"=====(<!doctype html>
         show(settings);
         show(streamButton);
         startStream();
+        // move servos to retrieved values
+        updateConfig(servoHorz);
+        updateConfig(servoVert);
       })
 
     // Put some helpful text on the 'Still' button
@@ -456,6 +485,54 @@ const uint8_t index_simple_html[] = R"=====(<!doctype html>
       }
     }
 
+    servoSave1Button.onclick = () => {
+      servoPos1Button.value = servoHorz.value + '-' + servoVert.value;
+      updateConfig(servoPos1Button);
+    }
+
+    servoSave2Button.onclick = () => {
+      servoPos2Button.value = servoHorz.value + '-' + servoVert.value;
+      updateConfig(servoPos2Button);
+    }
+
+    servoSave3Button.onclick = () => {
+      servoPos3Button.value = servoHorz.value + '-' + servoVert.value;
+      updateConfig(servoPos3Button);
+    }
+
+    servoSave4Button.onclick = () => {
+      servoPos4Button.value = servoHorz.value + '-' + servoVert.value;
+      updateConfig(servoPos4Button);
+    }
+
+    servoPos1Button.onclick = () => {
+      servoHorz.value = servoPos1Button.value.split('-')[0];
+      servoVert.value = servoPos1Button.value.split('-')[1];
+      updateConfig(servoHorz);
+      updateConfig(servoVert);
+    }
+
+    servoPos2Button.onclick = () => {
+      servoHorz.value = servoPos2Button.value.split('-')[0];
+      servoVert.value = servoPos2Button.value.split('-')[1];
+      updateConfig(servoHorz);
+      updateConfig(servoVert);
+    }
+
+    servoPos3Button.onclick = () => {
+      servoHorz.value = servoPos3Button.value.split('-')[0];
+      servoVert.value = servoPos3Button.value.split('-')[1];
+      updateConfig(servoHorz);
+      updateConfig(servoVert);
+    }
+
+    servoPos4Button.onclick = () => {
+      servoHorz.value = servoPos4Button.value.split('-')[0];
+      servoVert.value = servoPos4Button.value.split('-')[1];
+      updateConfig(servoHorz);
+      updateConfig(servoVert);
+    }
+    
     framesize.onchange = () => {
       updateConfig(framesize)
     }

@@ -13,6 +13,10 @@ extern int servoVert;
 extern int servoHorz;
 extern bool reverseVert;
 extern bool reverseHorz;
+extern char servoPos1[];
+extern char servoPos2[];
+extern char servoPos3[];
+extern char servoPos4[];
 /*
  * Useful utility when debugging...
  */
@@ -109,6 +113,15 @@ void loadPrefs(fs::FS &fs){
     reverseVert = (jsonExtract(prefs, "reverse_vert").toInt() == 0) ? false : true;
     reverseHorz = (jsonExtract(prefs, "reverse_horz").toInt() == 0) ? false : true;
 
+    String strPos = jsonExtract(prefs, "servo_pos1");
+    strPos.toCharArray(servoPos1, strPos.length() + 1);
+    strPos = jsonExtract(prefs, "servo_pos2");
+    strPos.toCharArray(servoPos2, strPos.length() + 1);
+    strPos = jsonExtract(prefs, "servo_pos3");
+    strPos.toCharArray(servoPos3, strPos.length() + 1);
+    strPos = jsonExtract(prefs, "servo_pos4");
+    strPos.toCharArray(servoPos4, strPos.length() + 1);
+
     // process camera settings
     s->set_framesize(s, (framesize_t)jsonExtract(prefs, "framesize").toInt());
     s->set_quality(s, jsonExtract(prefs, "quality").toInt());
@@ -160,6 +173,10 @@ void savePrefs(fs::FS &fs){
   p+=sprintf(p, "\"servo_horz\":%i,", servoHorz);
   p+=sprintf(p, "\"reverse_vert\":%u,", reverseVert);
   p+=sprintf(p, "\"reverse_horz\":%u,", reverseHorz);
+  p+=sprintf(p, "\"servo_pos1\":\"%s\",", servoPos1);
+  p+=sprintf(p, "\"servo_pos2\":\"%s\",", servoPos2);
+  p+=sprintf(p, "\"servo_pos3\":\"%s\",", servoPos3);
+  p+=sprintf(p, "\"servo_pos4\":\"%s\",", servoPos4);
   p+=sprintf(p, "\"framesize\":%u,", s->status.framesize);
   p+=sprintf(p, "\"quality\":%u,", s->status.quality);
   p+=sprintf(p, "\"xclk\":%u,", xclk);
@@ -193,6 +210,8 @@ void savePrefs(fs::FS &fs){
   file.print(json_response);
   file.close();
   dumpPrefs(SPIFFS);
+  Serial.printf("servoPos1: %s\r\n", servoPos1);
+  Serial.println(" ");
 }
 
 void removePrefs(fs::FS &fs) {

@@ -72,6 +72,10 @@ extern int servoVert;
 extern int servoHorz;
 extern bool reverseVert;
 extern bool reverseHorz;
+extern char servoPos1[];
+extern char servoPos2[];
+extern char servoPos3[];
+extern char servoPos4[];
 
 typedef struct {
         httpd_req_t *req;
@@ -422,6 +426,52 @@ static esp_err_t cmd_handler(httpd_req_t *req){
     }
     else if(!strcmp(variable, "reverse_vert")) reverseVert = val;
     else if(!strcmp(variable, "reverse_horz")) reverseHorz = val;
+
+    else if(!strcmp(variable, "servo_pos1")) strcpy(servoPos1, value);
+    else if(!strcmp(variable, "servo_pos2")) strcpy(servoPos2, value);
+    else if(!strcmp(variable, "servo_pos3")) strcpy(servoPos3, value);
+    else if(!strcmp(variable, "servo_pos4")) strcpy(servoPos4, value);
+    
+    /*
+    else if(!strcmp(variable, "servo_pos1")) std::copy(std::begin(value), std::end(value), std::begin(servoPos1));
+    else if(!strcmp(variable, "servo_pos2")) std::copy(std::begin(value), std::end(value), std::begin(servoPos2));
+    else if(!strcmp(variable, "servo_pos3")) std::copy(std::begin(value), std::end(value), std::begin(servoPos3));
+    else if(!strcmp(variable, "servo_pos4")) std::copy(std::begin(value), std::end(value), std::begin(servoPos4));
+    */
+
+    /*
+    else if(!strcmp(variable, "servo_pos1")) {
+      //for (uint i = 0; i < strlen(value); ++i) {
+      //  servoPos1[i] = value[i];
+      //}
+      strcpy(servoPos1, value);
+    }
+    else if(!strcmp(variable, "servo_pos2")) {
+      for (uint i = 0; i < strlen(value); i++) {
+        servoPos2[i] = value[i];
+      }
+    }
+    else if(!strcmp(variable, "servo_pos3")) {
+      for (uint i = 0; i < strlen(value); i++) {
+        servoPos3[i] = value[i];
+      }
+    }
+    else if(!strcmp(variable, "servo_pos4")) {
+    
+      //for (uint i = 0; i < strlen(value); i++) {
+      //  servoPos4[i] = value[i];
+      //}
+
+      servoPos4[0] = '1';
+      servoPos4[1] = '2';
+      servoPos4[2] = '3';
+      servoPos4[3] = '-';
+      servoPos4[4] = '1';
+      servoPos4[5] = '2';
+      servoPos4[6] = '3';
+      servoPos4[7] = '\0';
+    }
+    */
     else if(!strcmp(variable, "save_prefs")) {
         if (filesystem) savePrefs(SPIFFS);
     }
@@ -466,6 +516,10 @@ static esp_err_t status_handler(httpd_req_t *req){
         p+=sprintf(p, "\"servo_horz\":%d,", servoHorz);
         p+=sprintf(p, "\"reverse_vert\":%u,", reverseVert);
         p+=sprintf(p, "\"reverse_horz\":%u,", reverseHorz);
+        p+=sprintf(p, "\"servo_pos1\":\"%s\",", servoPos1);
+        p+=sprintf(p, "\"servo_pos2\":\"%s\",", servoPos2);
+        p+=sprintf(p, "\"servo_pos3\":\"%s\",", servoPos3);
+        p+=sprintf(p, "\"servo_pos4\":\"%s\",", servoPos4);
         p+=sprintf(p, "\"min_frame_time\":%d,", minFrameTime);
         p+=sprintf(p, "\"framesize\":%u,", s->status.framesize);
         p+=sprintf(p, "\"quality\":%u,", s->status.quality);

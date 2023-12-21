@@ -251,6 +251,10 @@ int servoHorz = 90;
 //Servo servo2;
 bool reverseVert = false;
 bool reverseHorz = false;
+char servoPos1[8] = "100-100";
+char servoPos2[8] = "100-100";
+char servoPos3[8] = "100-100";
+char servoPos4[8] = "100-100";
 
 void debugOn() {
     debugData = true;
@@ -316,16 +320,16 @@ void moveServoVert() {
   //servo1.write(servoVert);
   //ledcAnalogWrite(2, servoVert); // channel, 0-180
   ledcAnalogWrite(SERVO_VERT_CH, servoVert); // channel, 0-180
-  Serial.print("Servo Vert: ");
-  Serial.println(servoVert);
+  //Serial.print("Servo Vert: ");
+  //Serial.println(servoVert);
 }
 
 void moveServoHorz() {
   //servo2.write(servoHorz);
   //ledcAnalogWrite(4, servoHorz); // channel, 0-180)
   ledcAnalogWrite(SERVO_HORZ_CH, servoHorz); // channel, 0-180
-  Serial.print("Servo Horz: ");
-  Serial.println(servoHorz);
+  //Serial.print("Servo Horz: ");
+  //Serial.println(servoHorz);
 }
 
 void printLocalTime(bool extraData=false) {
