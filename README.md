@@ -1,11 +1,55 @@
-# ESP32-CAM example revisited - with servo control. &nbsp;&nbsp;&nbsp; <span title="Master branch build status">[![CI Status](https://travis-ci.com/easytarget/esp32-cam-webserver.svg?branch=master)](https://travis-ci.com/github/easytarget/esp32-cam-webserver)</span> &nbsp;&nbsp; <span title="ESP EYE">![ESP-EYE logo](Docs/logo.svg)</span>
+# ESP32-CAM example revisited - Supports dual-degree-of-freedom servos and wireguard-based intranet penetration &nbsp;&nbsp;&nbsp; 
+<span title="Master branch build status">
+
+[![CI Status](https://travis-ci.com/easytarget/esp32-cam-webserver.svg?branch=master)](https://travis-ci.com/github/easytarget/esp32-cam-webserver)</span> &nbsp;&nbsp;
+<span title="ESP EYE">![ESP-EYE logo](Docs/logo.svg)</span>
 
 ## Taken from the ESP examples, and expanded
+> [!IMPORTANT]
+> Since this code is old, it does not support esp32 version 3.x. Please use esp32 version 2.0.17 to compile it.
+> 由于此代码较为老旧，所以不支持 esp32 3.x 版本，请使用esp32 2.0.17 版本编译
 
+支持双自由度舵机和基于Wireuard的内网穿透
+
+### Intranet Penetration Modifications
+
+Configure your own wireguard parameters in myconfig.h
+
+```c
+// WireGuard settings
+IPAddress local_ip(10, 0, 0, 2);                                            // IP address of the local interface
+const char private_key[] = "oKXeV7gGtYTVcdgNKciDTkTLvmlZLbrzEcwpbXUDZH8=";  // Private key of the local interface
+const char endpoint_address[] = "1.1.1.1";                           // Address of the endpoint peer
+const char public_key[] = "0UWkW7oYVivNxoUX6OZWvhlpXcOeiX1FK682xNNDPxA=";   // Public key of the endpoint peer
+uint16_t endpoint_port = 51280;                                             // Port of the endpoint peer
+```
+
+Your server can refer to the following configuration
+
+```ini
+[Interface]
+Address = 10.0.0.1/24
+ListenPort = 51280
+PrivateKey = 8OZckuFQTgTczXnE0nJosrqVkxdi/GKS2fwmYOK53WA=
+
+[Peer]
+PublicKey = zV4LrlkKV7ne4zruqTgWfg6U4v7qL89YT2Q3I+5E7Gw=
+AllowedIPs = 10.0.0.2/32
+```
+Please note, please do not use the above parameters directly, direct use may bring a series of security problems, you can use [this page](https://wg.orz.tools/) to generate your own `public key` and `private key`.
+
+#### Refer
+
+https://github.com/andr13/ESP32-Web-WireGuard
+
+https://github.com/askew-etc/esp32-cam-webserver-servos
 
 ### Servo Modifications
 
 ![Servo UI Screenshot](Docs/servo-ui.png)
+
+> [!NOTE]
+> I'm in the process of redesigning this case, the current one may be too compact, while there are safety issues with not reserving a place for the charging port to be secured.
 
 3D Printer files for tilt and pan with covers: https://www.thingiverse.com/thing:4621865.
 You can buy the tilt and pan hardware with the screws along with the two servos from places like [Amazon](https://www.amazon.com/dp/B0775R6JFF) or [AliExpress](https://www.aliexpress.us/item/3256804363840656.html). Then you just need to 3D print Front_Cover.stl, Bottom_Cover.stl, and Mount_Original.stl.

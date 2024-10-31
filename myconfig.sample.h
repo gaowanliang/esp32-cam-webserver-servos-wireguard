@@ -22,7 +22,15 @@
  *    just replace your ssid and password in the line below.
  */
 
-struct station stationList[] = {{"my_ssid","my_password", true}};
+struct station stationList[] = {{"test","12345678", true}};
+
+// WireGuard settings
+IPAddress local_ip(10, 0, 0, 2);                                            // IP address of the local interface
+const char private_key[] = "oKXeV7gGtYTVcdgNKciDTkTLvmlZLbrzEcwpbXUDZH8=";  // Private key of the local interface
+const char endpoint_address[] = "1.1.1.1";                           // Address of the endpoint peer
+const char public_key[] = "0UWkW7oYVivNxoUX6OZWvhlpXcOeiX1FK682xNNDPxA=";   // Public key of the endpoint peer
+uint16_t endpoint_port = 51280;                                             // Port of the endpoint peer
+
 
 /*
  * You can extend the stationList[] above with additional SSID+Password pairs
